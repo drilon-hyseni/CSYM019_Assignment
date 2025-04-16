@@ -9,50 +9,136 @@
     />
     <script src="login_script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
   </head>
   <body>
-    <div class="main">
-      <input type="checkbox" id="chk" aria-hidden="true" />
-
-      <div class="signup">
-        <form id="signup-form">
-          <label for="chk" aria-hidden="true">Sign up</label>
-          <input
-            type="text"
-            name="username"
-            placeholder="User name"
-            required=""
-          />
-          <input type="text" name="name" placeholder="Full Name" required />
-          <input type="email" name="email" placeholder="Email" required="" />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required=""
-          />
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Verify Password"
-            required=""
-          />
-          <button type="submit">Sign up</button>
-        </form>
+    <div class="container">
+      <div class="tabs">
+        <button class="tab-btn" id="login-tab">Login</button>
+        <button class="tab-btn active" id="signup-tab">Sign Up</button>
       </div>
 
-      <div class="login">
-        <form>
-          <label for="chk" aria-hidden="true">Login</label>
-          <input type="email" name="email" placeholder="Email" required="" />
-          <input
-            type="password"
-            name="pswd"
-            placeholder="Password"
-            required=""
-          />
-          <button>Login</button>
-        </form>
+      <div class="forms-container">
+        <!-- Login Form -->
+        <div class="form" id="login-form">
+          <h2 class="form-title">Welcome Back</h2>
+          <form id="login">
+            <div class="input-group">
+              <input
+                type="text"
+                class="input-field"
+                placeholder="Email Or Username"
+                id="login-email"
+                required
+              />
+              <span class="error-message" id="login-email-error"
+                >Please enter a valid email address or username</span
+              >
+            </div>
+
+            <div class="input-group">
+              <input
+                type="password"
+                class="input-field"
+                placeholder="Password"
+                id="login-password"
+                required
+              />
+              <span class="password-toggle" id="login-password-toggle">👁️</span>
+              <span class="error-message" id="login-password-error"
+                >Password is required</span
+              >
+            </div>
+
+            <button type="submit" class="submit-btn">Login</button>
+
+            <div class="additional-action">
+              <a href="#">Forgot Password?</a>
+            </div>
+          </form>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div class="form active" id="signup-form">
+          <h2 class="form-title">Create Account</h2>
+          <form id="signup">
+            <div class="input-group">
+              <input
+                type="text"
+                class="input-field"
+                placeholder="Full Name"
+                id="signup-fullname"
+                required
+              />
+              <span class="error-message" id="signup-fullname-error"
+                >Please enter your full name</span
+              >
+            </div>
+
+            <div class="input-group">
+              <input
+                type="text"
+                class="input-field"
+                placeholder="Username"
+                id="signup-username"
+                required
+              />
+              <span class="error-message" id="signup-username-error"
+                >Username must be at least 3 characters</span
+              >
+            </div>
+
+            <div class="input-group">
+              <input
+                type="email"
+                class="input-field"
+                placeholder="Email"
+                id="signup-email"
+                required
+              />
+              <span class="error-message" id="signup-email-error"
+                >Please enter a valid email address</span
+              >
+            </div>
+
+            <div class="input-group">
+              <input
+                type="password"
+                class="input-field"
+                placeholder="Password"
+                id="signup-password"
+                required
+              />
+              <span class="password-toggle" id="signup-password-toggle"
+                >👁️</span
+              >
+              <span class="error-message" id="signup-password-error"
+                >Password must be at least 8 characters</span
+              >
+            </div>
+
+            <div class="input-group">
+              <input
+                type="password"
+                class="input-field"
+                placeholder="Confirm Password"
+                id="signup-confirm-password"
+                required
+              />
+              <span class="password-toggle" id="signup-confirm-password-toggle"
+                >👁️</span
+              >
+              <span class="error-message" id="signup-confirm-password-error"
+                >Passwords do not match</span
+              >
+            </div>
+
+            <button type="submit" class="submit-btn">Create Account</button>
+          </form>
+        </div>
       </div>
     </div>
   </body>
