@@ -1,4 +1,20 @@
 document.addEventListener("DOMContentLoaded", function () {
+  //Check if the user is logged in. If the user is logged in then it redirects to page
+  fetch("../../php/check_session.php", {
+    method: "GET",
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.logged_in) {
+        if (data.is_admin) {
+          window.location.href = "../admin/dashboard.html";
+        } else {
+          window.location.href = "../../index.html";
+        }
+      }
+    });
+
   // Tab Switching Logic
   const loginTab = document.getElementById("login-tab");
   const signupTab = document.getElementById("signup-tab");
@@ -165,68 +181,89 @@ document.addEventListener("DOMContentLoaded", function () {
     loginFormElement.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      const email = document.getElementById("login-email").value.trim();
-      const password = document.getElementById("login-password").value;
+      const emailEl = document.getElementById("login-email");
+      const passEl = document.getElementById("login-password");
+      const emailErr = document.getElementById("login-email-error");
+      const passErr = document.getElementById("login-password-error");
 
-      // const email = this.email.value.trim();
-      // const password = this.pswd.value;
+      // 1️⃣ Clear out any old errors
+      emailErr.style.display = "none";
+      passErr.style.display = "none";
+      emailEl.style.borderColor = "";
+      passEl.style.borderColor = "";
+
+      const email = emailEl.value.trim();
+      const password = passEl.value;
 
       let hasError = false;
 
       // Simple validation
       // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // 2️⃣ Client‑side validation
       if (!email) {
+        emailErr.textContent = "Email or username is required";
+        emailErr.style.display = "block";
+        emailEl.style.borderColor = "#e74c3c";
         hasError = true;
-        document.getElementById("login-email-error").style.display = "block";
       }
-
       if (!password) {
+        passErr.textContent = "Password is required";
+        passErr.style.display = "block";
+        passEl.style.borderColor = "#e74c3c";
         hasError = true;
-        document.getElementById("login-password-error").style.display = "block";
       }
 
-      if (!hasError) {
-        console.log("Login attempt:", { email, password });
-        const data = {
-          email,
-          password,
-        };
+      if (hasError) return;
 
-        console.log(JSON.stringify(data));
-        try {
-          const response = await fetch("../../php/login.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-            credentials: "include", // IMPORTANT: allows sending/receiving session cookies
-          });
+      const data = {
+        email,
+        password,
+      };
 
-          const result = await response.json();
-          console.log("result \n", result);
+      console.log(JSON.stringify(data));
+      try {
+        const response = await fetch("../../php/login.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+          credentials: "include", // IMPORTANT: allows sending/receiving session cookies
+        });
 
-          if (result["status"] === "success") {
-            console.log("user logged: ");
-            console.log("User is admin:", result.is_admin);
-            if (result.is_admin) {
-              window.location.href = "../admin/dashboard.html";
-            } else {
-              window.location.href = "../user/home.html";
-            }
+        const result = await response.json();
+        console.log("result \n", result);
+
+        //If login is successful, it checks if it is admin to redirect to admin page or to users page.
+        if (result["status"] === "success") {
+          console.log("user logged: ");
+          console.log("User is admin:", result.is_admin);
+          if (result.is_admin) {
+            window.location.href = "../admin/dashboard.html";
           } else {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: result.message,
-            });
+            window.location.href = "../../index.html";
           }
-        } catch (err) {
-          console.error(err);
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Something went wrong!",
-          });
+        } else {
+          if (result.message === "User not found") {
+            emailErr.textContent = result.message;
+            emailErr.style.display = "block";
+            emailEl.style.borderColor = "#e74c3c";
+          } else if (result.message === "Invalid credentials") {
+            passErr.textContent = result.message;
+            passErr.style.display = "block";
+            passEl.style.borderColor = "#e74c3c";
+          } else {
+            // fallback
+            emailErr.textContent = result.message;
+            emailErr.style.display = "block";
+            emailEl.style.borderColor = "#e74c3c";
+          }
         }
+      } catch (err) {
+        console.error(err);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong!",
+        });
       }
     });
   }

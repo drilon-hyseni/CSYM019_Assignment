@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="dashboard.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <div class="header">
+        <h1>Admin Dashboard</h1>
+        <div class="user-info">
+          <span>Welcome, Admin</span>
+          <div class="avatar">A</div>
+        </div>
+      </div>
+
+      <div class="status-bar">
+        <div class="status-item">
+          <span class="value">127</span>
+          <span class="label">Total Users</span>
+        </div>
+        <div class="status-item">
+          <span class="value">34</span>
+          <span class="label">Active Events</span>
+        </div>
+        <div class="status-item">
+          <span class="value">156</span>
+          <span class="label">Total Registrations</span>
+        </div>
+        <div class="status-item">
+          <span class="value">18</span>
+          <span class="label">New Today</span>
+        </div>
+      </div>
+
+      <div class="menu-grid">
+        <div class="menu-item" id="users-section">
+          <i class="fa-solid fa-users"></i>
+          <h3>Users Management</h3>
+          <p>Add, edit or delete users. Manage permissions and roles.</p>
+        </div>
+
+        <div class="menu-item" id="events-section">
+          <i class="fa-solid fa-calendar-days"></i>
+          <h3>Events</h3>
+          <p>Create and manage events, track registrations and attendance.</p>
+        </div>
+
+        <div class="menu-item" id="settings-section">
+          <i class="fa-solid fa-gear"></i>
+          <h3>Configurations</h3>
+          <p>System settings, preferences, and site configuration options.</p>
+        </div>
+
+        <div class="menu-item danger" id="logout-section">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <h3>Log Out</h3>
+          <p>Securely log out from the admin dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
