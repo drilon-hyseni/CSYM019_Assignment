@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Users Management - Admin Dashboard</title>
+    <link rel="stylesheet" href="users.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
+    <script src="users.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Users Management</h1>
+        <button class="back-button" id="back-to-dashboard">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </button>
+      </div>
+
+      <div class="users-container">
+        <div class="tools-bar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="search-user" placeholder="Search users..." />
+          </div>
+
+          <button class="add-user-btn" id="add-user-btn">
+            <i class="fas fa-plus"></i> Add New User
+          </button>
+        </div>
+
+        <div id="users-table-container">
+          <div class="loading-spinner" id="loading-spinner">
+            <div class="spinner"></div>
+          </div>
+          <!-- Add table-responsive wrapper here -->
+          <div class="table-responsive">
+            <table class="users-table" id="users-table" style="display: none">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Created On</th>
+                  <th>Status</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body">
+                <!-- User data will be populated here -->
+              </tbody>
+            </table>
+          </div>
+          <div class="no-users" id="no-users" style="display: none">
+            <i
+              class="fas fa-users"
+              style="font-size: 32px; margin-bottom: 10px"
+            ></i>
+            <p>No users found</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="edit-user-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modal-title">Edit User</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <form id="edit-user-form">
+          <input type="hidden" id="edit-user-id" />
+          <div class="form-group">
+            <label for="edit-name">Full Name</label>
+            <input type="text" class="form-control" id="edit-name" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-username">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="edit-username"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="edit-email">Email</label>
+            <input type="email" class="form-control" id="edit-email" required />
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <input type="checkbox" id="edit-valid" />
+              <label for="edit-valid">Active Account</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <input type="checkbox" id="edit-admin" />
+              <label for="edit-admin">Admin Privileges</label>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary close-modal">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!-- Add User Modal -->
+    <div id="add-user-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add New User</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <form id="add-user-form">
+          <div class="form-group">
+            <label for="add-name">Full Name</label>
+            <input type="text" class="form-control" id="add-name" required />
+          </div>
+          <div class="form-group">
+            <label for="add-username">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="add-username"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="add-email">Email</label>
+            <input type="email" class="form-control" id="add-email" required />
+          </div>
+          <div class="form-group">
+            <label for="add-password">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="add-password"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <input type="checkbox" id="add-valid" checked />
+              <label for="add-valid">Active Account</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <input type="checkbox" id="add-admin" />
+              <label for="add-admin">Admin Privileges</label>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary close-modal">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">Create User</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

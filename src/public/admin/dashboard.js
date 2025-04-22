@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("users-section")
     .addEventListener("click", function () {
-      window.location.href = "users.html";
+      window.location.href = "users/users.html";
     });
 
   document
