@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("settings-section")
     .addEventListener("click", function () {
-      window.location.href = "configurations.html";
+      window.location.href = "configuration/configuration.html";
     });
 
   document
