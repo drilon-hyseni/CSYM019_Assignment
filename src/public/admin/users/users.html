@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Users Management - Admin Dashboard</title>
+    <link rel="stylesheet" href="../../../styles.css" />
     <link rel="stylesheet" href="users.css" />
     <link
       rel="stylesheet"
@@ -25,14 +26,14 @@
         </button>
       </div>
 
-      <div class="users-container">
+      <div class="inner-container">
         <div class="tools-bar">
           <div class="search-box">
             <i class="fas fa-search"></i>
             <input type="text" id="search-user" placeholder="Search users..." />
           </div>
 
-          <button class="add-user-btn" id="add-user-btn">
+          <button class="add-btn" id="add-user-btn">
             <i class="fas fa-plus"></i> Add New User
           </button>
         </div>
@@ -43,7 +44,7 @@
           </div>
           <!-- Add table-responsive wrapper here -->
           <div class="table-responsive">
-            <table class="users-table" id="users-table" style="display: none">
+            <table class="table" id="users-table" style="display: none">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -61,7 +62,7 @@
               </tbody>
             </table>
           </div>
-          <div class="no-users" id="no-users" style="display: none">
+          <div class="no-result" id="no-users" style="display: none">
             <i
               class="fas fa-users"
               style="font-size: 32px; margin-bottom: 10px"

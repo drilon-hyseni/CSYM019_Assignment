@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const noCategoriesMessage = document.getElementById("no-categories");
   const searchInput = document.getElementById("search-input");
   const backToDashboardBtn = document.getElementById("back-to-dashboard");
-  const addCategoryBtn = document.getElementById("add-btn");
+  const addBtn = document.getElementById("add-btn");
   const editCategoryModal = document.getElementById("edit-category-modal");
   const addCategoryModal = document.getElementById("add-category-modal");
   const editCategoryForm = document.getElementById("edit-category-form");
@@ -33,8 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
     filterCategories(this.value);
   });
 
-  addCategoryBtn.addEventListener("click", function () {
-    showAddCategoryModal();
+  addBtn.addEventListener("click", function () {
+    window.location.href = "add_event.html";
   });
 
   // Close modals when clicking close buttons
@@ -168,29 +168,29 @@ document.addEventListener("DOMContentLoaded", function () {
       });
 
       row.innerHTML = `
-                  <td>#${category.category_id}</td>
-                  <td>${category.category_name}</td>
-                  <td>
-                    <span class="status-badge ${
-                      category.is_valid ? "status-active" : "status-inactive"
-                    }">
-                      ${category.is_valid ? "Active" : "Inactive"}
-                    </span>
-                  </td>
-                  <td>${formattedDate}</td>
-                  <td class="action-buttons">
-                    <button class="btn btn-edit" onclick="editCategory(${
-                      category.category_id
-                    })">
-                      <i class="fas fa-edit"></i>
-                    </button>
-                    <button class="btn btn-delete" onclick="deleteCategory(${
-                      category.category_id
-                    })">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </td>
-                `;
+                    <td>#${category.category_id}</td>
+                    <td>${category.category_name}</td>
+                    <td>
+                      <span class="status-badge ${
+                        category.is_valid ? "status-active" : "status-inactive"
+                      }">
+                        ${category.is_valid ? "Active" : "Inactive"}
+                      </span>
+                    </td>
+                    <td>${formattedDate}</td>
+                    <td class="action-buttons">
+                      <button class="btn btn-edit" onclick="editCategory(${
+                        category.category_id
+                      })">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="btn btn-delete" onclick="deleteCategory(${
+                        category.category_id
+                      })">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </td>
+                  `;
 
       categoriesTableBody.appendChild(row);
     });
@@ -213,16 +213,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Show modal
     editCategoryModal.style.display = "block";
   };
-
-  // Show add category modal
-  function showAddCategoryModal() {
-    // Reset form
-    document.getElementById("add-category-form").reset();
-    // Default to active category
-    document.getElementById("add-valid").checked = true;
-    // Show modal
-    addCategoryModal.style.display = "block";
-  }
 
   // Update category function
   function updateCategory() {

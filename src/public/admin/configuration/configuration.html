@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Configurations - Admin Dashboard</title>
+    <link rel="stylesheet" href="../../../styles.css" />
     <link rel="stylesheet" href="configuration.css" />
     <link
       rel="stylesheet"
@@ -25,18 +26,18 @@
         </button>
       </div>
 
-      <div class="categories-container">
+      <div class="inner-container">
         <div class="tools-bar">
           <div class="search-box">
             <i class="fas fa-search"></i>
             <input
               type="text"
-              id="search-category"
+              id="search-input"
               placeholder="Search categories..."
             />
           </div>
 
-          <button class="add-category-btn" id="add-category-btn">
+          <button class="add-btn" id="add-btn">
             <i class="fas fa-plus"></i> Add New Category
           </button>
         </div>
@@ -47,11 +48,7 @@
           </div>
           <!-- Add table-responsive wrapper here -->
           <div class="table-responsive">
-            <table
-              class="categories-table"
-              id="categories-table"
-              style="display: none"
-            >
+            <table class="table" id="categories-table" style="display: none">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -66,7 +63,7 @@
               </tbody>
             </table>
           </div>
-          <div class="no-categories" id="no-categories" style="display: none">
+          <div class="no-result" id="no-categories" style="display: none">
             <i
               class="fas fa-gear"
               style="font-size: 32px; margin-bottom: 10px"

@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("events-section")
     .addEventListener("click", function () {
-      window.location.href = "events.html";
+      window.location.href = "events/events.html";
     });
 
   document
