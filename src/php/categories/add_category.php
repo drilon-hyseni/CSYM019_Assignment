@@ -40,12 +40,12 @@ try {
     }
     
     
-    // Insert new user into database
+    // Insert new category into database
     $stmt = $conn->prepare("INSERT INTO Category (category_name, is_valid, created_at) VALUES (?, ?, NOW())");
     $result = $stmt->execute([$name, $valid]);
     
     if ($result) {
-        // Get the newly created user
+        // Get the newly created category
         $categoryId = $conn->lastInsertId();
         $stmt = $conn->prepare("SELECT category_id, category_name, created_at, is_valid  FROM Category WHERE category_id = ?");
         $stmt->execute([$categoryId]);
