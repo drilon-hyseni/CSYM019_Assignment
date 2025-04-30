@@ -57,7 +57,6 @@ try {
     $event_date = htmlspecialchars(trim($_POST['event_date'] ?? ''), ENT_QUOTES, 'UTF-8');
     $location = htmlspecialchars(trim($_POST['location'] ?? ''), ENT_QUOTES, 'UTF-8');
     
-    $is_valid = isset($_POST['is_valid']) ? 1 : 0;
     $categories = isset($_POST['categories']) ? $_POST['categories'] : [];
     $user_id = $_SESSION['user_id'];
     
@@ -67,10 +66,10 @@ try {
     }
     
     // Insert event into the database
-    $query = "INSERT INTO Events (event_title, event_description, event_date, location, is_valid, date_created, created_by) 
+    $query = "INSERT INTO Events (event_title, event_description, event_date, location, date_created, created_by) 
               VALUES (?, ?, ?, ?, ?, NOW(), ?)";
     $stmt = $pdo->prepare($query);
-    $stmt->execute([$event_title, $event_description, $event_date, $location, $is_valid, $user_id]);
+    $stmt->execute([$event_title, $event_description, $event_date, $location, $user_id]);
     
     // Get the new event ID
     $event_id = $pdo->lastInsertId();

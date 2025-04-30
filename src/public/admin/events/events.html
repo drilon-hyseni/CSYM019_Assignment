@@ -3,75 +3,92 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Events - Admin Dashboard</title>
-    <link rel="stylesheet" href="../../../styles.css" />
+    <title>Event Management</title>
     <link rel="stylesheet" href="events.css" />
+    <link rel="stylesheet" href="../../../styles.css" />
+    <!-- Select2 for enhanced dropdowns -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <!-- SweetAlert2 for alerts -->
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.min.css"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css"
     />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
-    <script src="events.js"></script>
   </head>
   <body>
     <div class="container">
-      <div class="header">
-        <h1>Events</h1>
-        <button class="back-button" id="back-to-dashboard">
-          <i class="fas fa-arrow-left"></i> Back to Dashboard
-        </button>
-      </div>
-
-      <div class="inner-container">
-        <div class="tools-bar">
-          <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input
-              type="text"
-              id="search-input"
-              placeholder="Search events..."
-            />
-          </div>
-
-          <button class="add-btn" id="add-btn">
-            <i class="fas fa-plus"></i> Add New Event
+      <header>
+        <h1>Event Management</h1>
+        <div class="header-actions">
+          <button id="add-event-button" class="btn btn-primary">
+            Add New Event
+          </button>
+          <button id="back-to-dashboard" class="btn btn-secondary">
+            Back to Dashboard
           </button>
         </div>
+      </header>
 
-        <div>
-          <div class="loading-spinner" id="loading-spinner">
-            <div class="spinner"></div>
-          </div>
-          <!-- Add table-responsive wrapper here -->
-          <div class="table-responsive">
-            <table class="table" id="categories-table" style="display: none">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Active</th>
-                  <th>Created On</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="categories-table-body">
-                <!-- Events will be populated here -->
-              </tbody>
-            </table>
-          </div>
-          <div class="no-result" id="no-categories" style="display: none">
-            <i
-              class="fas fa-gear"
-              style="font-size: 32px; margin-bottom: 10px"
-            ></i>
-            <p>No events found</p>
-          </div>
+      <div class="event-filters">
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="Search events..." />
+          <button id="search-button" class="btn btn-primary">Search</button>
+        </div>
+        <div class="filter-options">
+          <select id="category-filter">
+            <option value="">All Categories</option>
+            <!-- Will be populated via JavaScript -->
+          </select>
+          <select id="status-filter">
+            <option value="">All Status</option>
+            <option value="1">Active</option>
+            <option value="0">Inactive</option>
+          </select>
         </div>
       </div>
+
+      <div class="table-container">
+        <table id="events-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Categories</th>
+              <th>Location</th>
+              <th>Event Date</th>
+              <th>Date Added</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="events-body">
+            <!-- Will be populated via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <div id="pagination" class="pagination">
+        <!-- Pagination will be added dynamically -->
+      </div>
+
+      <div id="loading-spinner" class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
     </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="events.js"></script>
   </body>
 </html>

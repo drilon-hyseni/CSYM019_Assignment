@@ -1,77 +1,72 @@
 document.addEventListener("DOMContentLoaded", function () {
   // DOM elements
-  const categoriesTable = document.getElementById("categories-table");
-  const categoriesTableBody = document.getElementById("categories-table-body");
-  const loadingSpinner = document.getElementById("loading-spinner");
-  const noCategoriesMessage = document.getElementById("no-categories");
+  const eventsTable = document.getElementById("events-table");
+  const eventsBody = document.getElementById("events-body");
+  const addEventButton = document.getElementById("add-event-button");
+  const backToDashboardButton = document.getElementById("back-to-dashboard");
   const searchInput = document.getElementById("search-input");
-  const backToDashboardBtn = document.getElementById("back-to-dashboard");
-  const addBtn = document.getElementById("add-btn");
-  const editCategoryModal = document.getElementById("edit-category-modal");
-  const addCategoryModal = document.getElementById("add-category-modal");
-  const editCategoryForm = document.getElementById("edit-category-form");
-  const addCategoryForm = document.getElementById("add-category-form");
-
-  // Modal close buttons
-  const closeModalButtons = document.querySelectorAll(".close-modal");
+  const searchButton = document.getElementById("search-button");
+  const categoryFilter = document.getElementById("category-filter");
+  const statusFilter = document.getElementById("status-filter");
+  const paginationContainer = document.getElementById("pagination");
+  const loadingSpinner = document.getElementById("loading-spinner");
 
   // State variables
-  let categories = [];
-  let filteredCategories = [];
-  const itemsPerPage = 10;
   let currentPage = 1;
+  let eventsPerPage = 10;
+  let totalPages = 1;
+  let currentEvents = [];
+  let allCategories = [];
+  let allEvents = [];
 
-  // Initialize
-  fetchCategories();
-
-  // Event Listeners
-  backToDashboardBtn.addEventListener("click", function () {
-    window.location.href = "../dashboard.html";
-  });
-
-  searchInput.addEventListener("input", function () {
-    filterCategories(this.value);
-  });
-
-  addBtn.addEventListener("click", function () {
+  // Event listeners
+  addEventButton.addEventListener("click", function () {
     window.location.href = "add_event.html";
   });
 
-  // Close modals when clicking close buttons
-  closeModalButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      editCategoryModal.style.display = "none";
-      addCategoryModal.style.display = "none";
+  backToDashboardButton.addEventListener("click", function () {
+    window.location.href = "../dashboard.html";
+  });
+
+  searchButton.addEventListener("click", function () {
+    filterEvents();
+  });
+
+  searchInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+      filterEvents();
+    }
+  });
+
+  categoryFilter.addEventListener("change", filterEvents);
+  statusFilter.addEventListener("change", filterEvents);
+
+  // Initialize
+  fetchCategories();
+  fetchEvents();
+
+  // Functions
+  function showLoading() {
+    loadingSpinner.style.display = "flex";
+  }
+
+  function hideLoading() {
+    loadingSpinner.style.display = "none";
+  }
+
+  function showError(message) {
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: message,
+      confirmButtonColor: "#573b8a",
     });
-  });
+  }
 
-  // Close modals when clicking outside
-  window.addEventListener("click", function (event) {
-    if (event.target === editCategoryModal) {
-      editCategoryModal.style.display = "none";
-    }
-    if (event.target === addCategoryModal) {
-      addCategoryModal.style.display = "none";
-    }
-  });
-
-  // Form submissions
-  editCategoryForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    updateCategory();
-  });
-
-  addCategoryForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    createCategory();
-  });
-
-  // Fetch categories from API
   function fetchCategories() {
     showLoading();
-
     fetch("../../../php/categories/get_categories.php", {
-      credentials: "include", // Include session cookies
+      credentials: "include",
     })
       .then((response) => {
         if (!response.ok) {
@@ -80,232 +75,241 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.json();
       })
       .then((data) => {
+        hideLoading();
         if (data.status === "success") {
-          categories = data.categories;
-          filteredCategories = [...categories];
-          renderCategories();
+          allCategories = data.categories;
+          populateCategoryFilter(data.categories);
         } else {
           showError(data.message || "Error fetching categories");
         }
       })
       .catch((error) => {
+        hideLoading();
         console.error("Error:", error);
         showError("Failed to load categories. Please try again.");
-      })
-      .finally(() => {
-        hideLoading();
       });
   }
 
-  // Display loading spinner
-  function showLoading() {
-    loadingSpinner.style.display = "flex";
-    categoriesTable.style.display = "none";
-    noCategoriesMessage.style.display = "none";
-  }
+  function populateCategoryFilter(categories) {
+    categoryFilter.innerHTML = '<option value="">All Categories</option>';
 
-  // Hide loading spinner
-  function hideLoading() {
-    loadingSpinner.style.display = "none";
-    if (filteredCategories.length > 0) {
-      categoriesTable.style.display = "table";
-      noCategoriesMessage.style.display = "none";
-    } else {
-      categoriesTable.style.display = "none";
-      noCategoriesMessage.style.display = "block";
-    }
-  }
-
-  // Show error with SweetAlert
-  function showError(message) {
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: message,
+    categories.forEach((category) => {
+      if (category.is_valid) {
+        const option = document.createElement("option");
+        option.value = category.category_id;
+        option.textContent = category.category_name;
+        categoryFilter.appendChild(option);
+      }
     });
   }
 
-  // Filter categories based on search input
-  function filterCategories(searchTerm) {
-    searchTerm = searchTerm.toLowerCase();
-
-    if (!searchTerm) {
-      filteredCategories = [...categories];
-    } else {
-      filteredCategories = categories.filter((category) =>
-        category.category_name.toLowerCase().includes(searchTerm)
-      );
-    }
-
-    currentPage = 1; // Reset to first page when filtering
-    renderCategories();
+  function fetchEvents() {
+    showLoading();
+    fetch("../../../php/events/get_events.php", {
+      credentials: "include",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        hideLoading();
+        if (data.status === "success") {
+          allEvents = data.events; // Keep original
+          currentEvents = [...allEvents]; // Copy for filtering
+          console.log("Events: ", currentEvents);
+          totalPages = Math.ceil(currentEvents.length / eventsPerPage);
+          renderEvents();
+          renderPagination();
+        } else {
+          showError(data.message || "Error fetching events");
+        }
+      })
+      .catch((error) => {
+        hideLoading();
+        console.error("Error:", error);
+        showError("Failed to load events. Please try again.");
+      });
   }
 
-  // Render categories table
-  function renderCategories() {
-    // Clear existing table content
-    categoriesTableBody.innerHTML = "";
+  function filterEvents() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const categoryId = categoryFilter.value;
+    const status = statusFilter.value;
 
-    // Check if there are any categories to display
-    if (filteredCategories.length === 0) {
-      categoriesTable.style.display = "none";
-      noCategoriesMessage.style.display = "block";
+    const filteredEvents = allEvents.filter((event) => {
+      // Search term filter
+      const matchesSearch =
+        searchTerm === "" ||
+        event.event_title.toLowerCase().includes(searchTerm) ||
+        event.event_description.toLowerCase().includes(searchTerm) ||
+        event.location.toLowerCase().includes(searchTerm);
+
+      // Category filter
+      let matchesCategory = true;
+      if (categoryId) {
+        matchesCategory = event.categories.some(
+          (cat) => String(cat.category_id) === String(categoryId)
+        );
+      }
+
+      // Status filter
+      const matchesStatus =
+        status === "" || event.is_valid.toString() === status;
+
+      return matchesSearch && matchesCategory && matchesStatus;
+    });
+
+    // Update display
+    currentEvents = filteredEvents;
+    currentPage = 1;
+    totalPages = Math.ceil(currentEvents.length / eventsPerPage);
+    renderEvents();
+    renderPagination();
+  }
+
+  function renderEvents() {
+    eventsBody.innerHTML = "";
+
+    if (currentEvents.length === 0) {
+      const noEventsRow = document.createElement("tr");
+      noEventsRow.innerHTML = `<td colspan="9" style="text-align: center;">No events found</td>`;
+      eventsBody.appendChild(noEventsRow);
       return;
     }
 
-    const paginatedCategories = filteredCategories;
+    // Calculate pagination
+    const startIndex = (currentPage - 1) * eventsPerPage;
+    const endIndex = Math.min(startIndex + eventsPerPage, currentEvents.length);
+    const paginatedEvents = currentEvents.slice(startIndex, endIndex);
 
-    // Generate table rows
-    paginatedCategories.forEach((category) => {
+    paginatedEvents.forEach((event) => {
       const row = document.createElement("tr");
 
-      // Format date
-      const createdDate = new Date(category.created_at);
-      const formattedDate = createdDate.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
+      function decodeHtml(html) {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+      }
+      const tempDiv = document.createElement("div");
+      // Extract plain text from HTML content
+      const decoded = decodeHtml(event.event_description);
+      tempDiv.innerHTML = decoded;
+      const plainTextDescription = tempDiv.textContent || tempDiv.innerText;
+
+      // Trim description to a reasonable length
+      const trimmedDescription =
+        plainTextDescription.length > 100
+          ? plainTextDescription.substring(0, 100) + "..."
+          : plainTextDescription;
+
+      // Format categories
+      const categoryNames = event.categories
+        ? event.categories.map((cat) => cat.category_name).join(", ")
+        : "";
+
+      // Format dates
+      const eventDate = new Date(event.event_date).toLocaleString();
+      const dateCreated = new Date(event.date_created).toLocaleDateString();
+
+      // Status badge
+      const statusBadge = event.is_valid
+        ? '<span class="status-badge status-active">Active</span>'
+        : '<span class="status-badge status-inactive">Inactive</span>';
 
       row.innerHTML = `
-                    <td>#${category.category_id}</td>
-                    <td>${category.category_name}</td>
-                    <td>
-                      <span class="status-badge ${
-                        category.is_valid ? "status-active" : "status-inactive"
-                      }">
-                        ${category.is_valid ? "Active" : "Inactive"}
-                      </span>
-                    </td>
-                    <td>${formattedDate}</td>
-                    <td class="action-buttons">
-                      <button class="btn btn-edit" onclick="editCategory(${
-                        category.category_id
-                      })">
-                        <i class="fas fa-edit"></i>
-                      </button>
-                      <button class="btn btn-delete" onclick="deleteCategory(${
-                        category.category_id
-                      })">
-                        <i class="fas fa-trash"></i>
-                      </button>
-                    </td>
-                  `;
+              <td>${event.event_id}</td>
+              <td>${event.event_title}</td>
+              <td class="description-cell">${trimmedDescription}</td>
+              <td>${categoryNames}</td>
+              <td>${event.location}</td>
+              <td>${eventDate}</td>
+              <td>${dateCreated}</td>
+              <td>${statusBadge}</td>
+              <td class="action-buttons">
+                  <button class="btn btn-edit" data-id="${event.event_id}"><i class="fas fa-edit"></i></button>
+                  <button class="btn btn-delete"  onclick="deleteEvent(${event.event_id})" data-id="${event.event_id}">
+                  <i class="fas fa-trash"></i>
+                  </button>
+              </td>
+          `;
 
-      categoriesTableBody.appendChild(row);
+      eventsBody.appendChild(row);
     });
 
-    // Display table
-    categoriesTable.style.display = "table";
-    noCategoriesMessage.style.display = "none";
-  }
-
-  window.editCategory = function (categoryId) {
-    const category = categories.find((c) => c.category_id === categoryId);
-    if (!category) return;
-
-    // Populate form fields
-    document.getElementById("edit-category-id").value = category.category_id;
-    document.getElementById("edit-name").value = category.category_name;
-    document.getElementById("edit-valid").checked =
-      category.is_valid === 1 || category.is_valid === true;
-
-    // Show modal
-    editCategoryModal.style.display = "block";
-  };
-
-  // Update category function
-  function updateCategory() {
-    const categoryId = document.getElementById("edit-category-id").value;
-    const categoryData = {
-      name: document.getElementById("edit-name").value,
-      valid: document.getElementById("edit-valid").checked ? 1 : 0,
-    };
-
-    fetch(`../../../php/categories/update_category.php`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: categoryId, ...categoryData }),
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "success") {
-          // Update local categories array
-          const categoryIndex = categories.findIndex((c) => c.id == categoryId);
-          if (categoryIndex !== -1) {
-            categories[categoryIndex] = {
-              ...categories[categoryIndex],
-              ...categoryData,
-            };
-            filteredCategories = [...categories]; // Reset filtered list
-            renderCategories();
-          }
-
-          // Close modal and show success message
-          editCategoryModal.style.display = "none";
-          Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "Category has been updated successfully.",
-          });
-        } else {
-          showError(data.message || "Failed to update category");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        showError("An error occurred while updating the category");
+    // Add event listeners to action buttons
+    document.querySelectorAll(".edit-btn").forEach((button) => {
+      button.addEventListener("click", function () {
+        const eventId = this.getAttribute("data-id");
+        // We're not implementing edit functionality yet as per requirements
+        console.log(`Edit event with ID: ${eventId}`);
       });
-  }
+    });
 
-  // Create category function
-  function createCategory() {
-    const categoryData = {
-      name: document.getElementById("add-name").value,
-      valid: document.getElementById("add-valid").checked ? 1 : 0,
-    };
-
-    fetch("../../../php/categories/add_category.php", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(categoryData),
-      credentials: "include",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === "success") {
-          // Add new category to array and refresh display
-          if (data.category) {
-            categories.push(data.category);
-            filteredCategories = [...categories];
-            renderCategories();
-          } else {
-            // If server didn't return the category, refetch all categories
-            fetchCategories();
-          }
-
-          // Close modal and show success message
-          addCategoryModal.style.display = "none";
-          Swal.fire({
-            icon: "success",
-            title: "Success!",
-            text: "New category has been created successfully.",
-          });
-        } else {
-          showError(data.message || "Failed to create category");
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        showError("An error occurred while creating the category");
+    document.querySelectorAll(".delete-btn").forEach((button) => {
+      button.addEventListener("click", function () {
+        const eventId = this.getAttribute("data-id");
+        // We're not implementing delete functionality yet as per requirements
+        console.log(`Delete event with ID: ${eventId}`);
       });
+    });
   }
 
-  // Delete category function
-  window.deleteCategory = function (categoryId) {
+  function renderPagination() {
+    paginationContainer.innerHTML = "";
+
+    if (totalPages <= 1) {
+      return;
+    }
+
+    // Previous page button
+    const prevPageLink = document.createElement("span");
+    prevPageLink.classList.add("page-link");
+    prevPageLink.innerHTML = "&laquo;";
+    prevPageLink.addEventListener("click", function () {
+      if (currentPage > 1) {
+        currentPage--;
+        renderEvents();
+        renderPagination();
+      }
+    });
+    paginationContainer.appendChild(prevPageLink);
+
+    // Page number buttons
+    for (let i = 1; i <= totalPages; i++) {
+      const pageLink = document.createElement("span");
+      pageLink.classList.add("page-link");
+      if (i === currentPage) {
+        pageLink.classList.add("active");
+      }
+      pageLink.textContent = i;
+      pageLink.addEventListener("click", function () {
+        currentPage = i;
+        renderEvents();
+        renderPagination();
+      });
+      paginationContainer.appendChild(pageLink);
+    }
+
+    // Next page button
+    const nextPageLink = document.createElement("span");
+    nextPageLink.classList.add("page-link");
+    nextPageLink.innerHTML = "&raquo;";
+    nextPageLink.addEventListener("click", function () {
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderEvents();
+        renderPagination();
+      }
+    });
+    paginationContainer.appendChild(nextPageLink);
+  }
+
+  window.deleteEvent = function (eventId) {
     Swal.fire({
-      title: "Are you sure?",
+      title: "Are you sure you want to delete this event?",
       text: "This action cannot be undone!",
       icon: "warning",
       showCancelButton: true,
@@ -317,26 +321,13 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch("../../../php/categories/delete_category.php", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: categoryId }),
+          body: JSON.stringify({ id: eventId }),
           credentials: "include",
         })
           .then((response) => response.json())
           .then((data) => {
             if (data.status === "success") {
-              // Remove category from array
-              categories = categories.filter(
-                (category) => category.category_id != categoryId
-              );
-              filteredCategories = filteredCategories.filter(
-                (category) => category.category_id != categoryId
-              );
-              renderCategories();
-
-              Swal.fire(
-                "Deleted!",
-                "The category has been deleted.",
-                "success"
-              );
+              Swal.fire("Deleted!", "The event has been deleted.", "success");
             } else {
               showError(data.message || "Failed to delete category");
             }
