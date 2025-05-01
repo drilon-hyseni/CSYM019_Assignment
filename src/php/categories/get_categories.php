@@ -14,7 +14,7 @@ require_once '../db.php';
 
 try {
     // Prepare and execute query to get all categories
-    $stmt = $conn->prepare("SELECT category_id, category_name, created_at, is_valid FROM Category");
+    $stmt = $conn->prepare("SELECT * FROM Category WHERE is_valid = 1");
     $stmt->execute();
     
     // Get all users

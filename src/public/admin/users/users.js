@@ -221,8 +221,6 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("edit-name").value = user.name;
     document.getElementById("edit-username").value = user.username;
     document.getElementById("edit-email").value = user.email;
-    document.getElementById("edit-valid").checked =
-      user.valid === 1 || user.valid === true;
     document.getElementById("edit-admin").checked =
       user.is_admin === 1 || user.is_admin === true;
 
@@ -234,8 +232,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function showAddUserModal() {
     // Reset form
     document.getElementById("add-user-form").reset();
-    // Default to active user
-    document.getElementById("add-valid").checked = true;
     // Show modal
     addUserModal.style.display = "block";
   }
@@ -247,7 +243,6 @@ document.addEventListener("DOMContentLoaded", function () {
       name: document.getElementById("edit-name").value,
       username: document.getElementById("edit-username").value,
       email: document.getElementById("edit-email").value,
-      valid: document.getElementById("edit-valid").checked ? 1 : 0,
       is_admin: document.getElementById("edit-admin").checked ? 1 : 0,
     };
 
@@ -292,7 +287,6 @@ document.addEventListener("DOMContentLoaded", function () {
       username: document.getElementById("add-username").value,
       email: document.getElementById("add-email").value,
       password: document.getElementById("add-password").value,
-      valid: document.getElementById("add-valid").checked ? 1 : 0,
       is_admin: document.getElementById("add-admin").checked ? 1 : 0,
     };
 

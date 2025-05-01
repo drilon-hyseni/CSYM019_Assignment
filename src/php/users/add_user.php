@@ -28,7 +28,6 @@ $name = $data['name'];
 $username = $data['username'];
 $email = $data['email'];
 $password = $data['password'];
-$valid = isset($data['valid']) ? $data['valid'] : 1;
 $is_admin = isset($data['is_admin']) ? $data['is_admin'] : 0;
 
 try {
@@ -56,13 +55,13 @@ try {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     
     // Insert new user into database
-    $stmt = $conn->prepare("INSERT INTO users (name, username, email, password, created_at, valid, is_admin) VALUES (?, ?, ?, ?, NOW(), ?, ?)");
-    $result = $stmt->execute([$name, $username, $email, $hashed_password, $valid, $is_admin]);
+    $stmt = $conn->prepare("INSERT INTO users (name, username, email, password, created_at, is_admin) VALUES (?, ?, ?, ?, NOW(), ?)");
+    $result = $stmt->execute([$name, $username, $email, $hashed_password, $is_admin]);
     
     if ($result) {
         // Get the newly created user
         $userId = $conn->lastInsertId();
-        $stmt = $conn->prepare("SELECT id, name, username, email, created_at, valid, is_admin FROM users WHERE id = ?");
+        $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
         $stmt->execute([$userId]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         

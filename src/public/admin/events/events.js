@@ -318,7 +318,7 @@ document.addEventListener("DOMContentLoaded", function () {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        fetch("../../../php/categories/delete_category.php", {
+        fetch("../../../php/events/delete_event.php", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: eventId }),
@@ -329,12 +329,12 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.status === "success") {
               Swal.fire("Deleted!", "The event has been deleted.", "success");
             } else {
-              showError(data.message || "Failed to delete category");
+              showError(data.message || "Failed to delete event");
             }
           })
           .catch((error) => {
             console.error("Error:", error);
-            showError("An error occurred while deleting the category");
+            showError("An error occurred while deleting the event");
           });
       }
     });

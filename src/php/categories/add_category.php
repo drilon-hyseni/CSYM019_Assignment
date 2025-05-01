@@ -25,7 +25,7 @@ if (!isset($data['name'])) {
 
 // Extract data
 $name = $data['name'];
-$valid = isset($data['valid']) ? $data['valid'] : 1;
+
 
 
 try {
@@ -41,8 +41,8 @@ try {
     
     
     // Insert new category into database
-    $stmt = $conn->prepare("INSERT INTO Category (category_name, is_valid, created_at) VALUES (?, ?, NOW())");
-    $result = $stmt->execute([$name, $valid]);
+    $stmt = $conn->prepare("INSERT INTO Category (category_name, created_at) VALUES (?, NOW())");
+    $result = $stmt->execute([$name]);
     
     if ($result) {
         // Get the newly created category

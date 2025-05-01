@@ -26,7 +26,7 @@ if (!isset($data['id']) || !isset($data['name'])) {
 // Extract data
 $id = $data['id'];
 $name = $data['name'];
-$valid = isset($data['valid']) ? $data['valid'] : 0;
+
 
 
 try {
@@ -42,8 +42,8 @@ try {
     
     
     // Update category in database
-    $stmt = $conn->prepare("UPDATE Category SET category_name = ?,  is_valid = ? WHERE category_id = ?");
-    $result = $stmt->execute([$name, $valid, $id]);
+    $stmt = $conn->prepare("UPDATE Category SET category_name = ? WHERE category_id = ?");
+    $result = $stmt->execute([$name, $id]);
     
     if ($result) {
         header('Content-Type: application/json');

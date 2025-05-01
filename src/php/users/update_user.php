@@ -28,7 +28,6 @@ $id = $data['id'];
 $name = $data['name'];
 $username = $data['username'];
 $email = $data['email'];
-$valid = isset($data['valid']) ? $data['valid'] : 0;
 $is_admin = isset($data['is_admin']) ? $data['is_admin'] : 0;
 
 try {
@@ -53,8 +52,8 @@ try {
     }
     
     // Update user in database
-    $stmt = $conn->prepare("UPDATE users SET name = ?, username = ?, email = ?, valid = ?, is_admin = ? WHERE id = ?");
-    $result = $stmt->execute([$name, $username, $email, $valid, $is_admin, $id]);
+    $stmt = $conn->prepare("UPDATE users SET name = ?, username = ?, email = ?,  is_admin = ? WHERE id = ?");
+    $result = $stmt->execute([$name, $username, $email, $is_admin, $id]);
     
     if ($result) {
         header('Content-Type: application/json');

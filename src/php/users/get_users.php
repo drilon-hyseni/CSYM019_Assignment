@@ -14,7 +14,7 @@ require_once '../db.php';
 
 try {
     // Prepare and execute query to get all users
-    $stmt = $conn->prepare("SELECT id, name, username, email, created_at, valid, is_admin FROM users");
+    $stmt = $conn->prepare("SELECT id, name, username, email, created_at, valid, is_admin FROM users WHERE valid=1");
     $stmt->execute();
     
     // Get all users

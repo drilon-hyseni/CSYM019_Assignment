@@ -30,7 +30,7 @@ $categoryId = $data['id'];
 
 try {
 
-    // Option 2: Soft delete - just set the valid flag to 0
+    // Soft delete - just set the valid flag to 0
     $stmt = $conn->prepare("UPDATE Category SET is_valid = 0 WHERE category_id = ?");
     $result = $stmt->execute([$categoryId]);
     

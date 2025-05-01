@@ -207,8 +207,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // Populate form fields
     document.getElementById("edit-category-id").value = category.category_id;
     document.getElementById("edit-name").value = category.category_name;
-    document.getElementById("edit-valid").checked =
-      category.is_valid === 1 || category.is_valid === true;
 
     // Show modal
     editCategoryModal.style.display = "block";
@@ -218,8 +216,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function showAddCategoryModal() {
     // Reset form
     document.getElementById("add-category-form").reset();
-    // Default to active category
-    document.getElementById("add-valid").checked = true;
     // Show modal
     addCategoryModal.style.display = "block";
   }
@@ -229,7 +225,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const categoryId = document.getElementById("edit-category-id").value;
     const categoryData = {
       name: document.getElementById("edit-name").value,
-      valid: document.getElementById("edit-valid").checked ? 1 : 0,
     };
 
     fetch(`../../../php/categories/update_category.php`, {
@@ -273,7 +268,6 @@ document.addEventListener("DOMContentLoaded", function () {
   function createCategory() {
     const categoryData = {
       name: document.getElementById("add-name").value,
-      valid: document.getElementById("add-valid").checked ? 1 : 0,
     };
 
     fetch("../../../php/categories/add_category.php", {
