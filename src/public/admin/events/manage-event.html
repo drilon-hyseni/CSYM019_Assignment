@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Event - Admin Dashboard</title>
+    <title>Manage Event - Admin Dashboard</title>
     <link rel="stylesheet" href="add-event.css" />
     <link rel="stylesheet" href="../../../styles.css" />
     <link
@@ -29,19 +29,22 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-    <script type="module" src="add-event.js"></script>
+    <script src="manage-event.js"></script>
   </head>
   <body>
     <div class="container">
       <div class="header">
-        <h1>Add New Event</h1>
+        <h1 id="page-title">Add New Event</h1>
         <button class="back-button" id="back-to-dashboard">
           <i class="fas fa-arrow-left"></i> Back to Events
         </button>
       </div>
 
       <div class="form-container">
-        <form id="add-event-form" enctype="multipart/form-data">
+        <form id="manage-event-form" enctype="multipart/form-data">
+          <!-- Hidden field to store event ID for edit mode -->
+          <input type="hidden" id="event-id" name="event_id" value="" />
+
           <div class="form-section">
             <h2><i class="fas fa-info-circle"></i> Event Information</h2>
 
@@ -154,6 +157,13 @@
                 >
                   <i class="fas fa-times"></i>
                 </button>
+                <!-- Hidden field to track existing images -->
+                <input
+                  type="hidden"
+                  name="existing_image_1"
+                  id="existing-image-1"
+                  value=""
+                />
               </div>
 
               <div class="image-upload-box" id="image-upload-2">
@@ -181,6 +191,13 @@
                 >
                   <i class="fas fa-times"></i>
                 </button>
+                <!-- Hidden field to track existing images -->
+                <input
+                  type="hidden"
+                  name="existing_image_2"
+                  id="existing-image-2"
+                  value=""
+                />
               </div>
 
               <div class="image-upload-box" id="image-upload-3">
@@ -208,6 +225,13 @@
                 >
                   <i class="fas fa-times"></i>
                 </button>
+                <!-- Hidden field to track existing images -->
+                <input
+                  type="hidden"
+                  name="existing_image_3"
+                  id="existing-image-3"
+                  value=""
+                />
               </div>
             </div>
           </div>
@@ -216,7 +240,7 @@
             <button type="button" class="btn btn-secondary" id="cancel-button">
               Cancel
             </button>
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary" id="save-button">
               <i class="fas fa-save"></i> Save Event
             </button>
           </div>

@@ -229,7 +229,7 @@ document.addEventListener("DOMContentLoaded", function () {
               <td>${dateCreated}</td>
               <td>${statusBadge}</td>
               <td class="action-buttons">
-                  <button class="btn btn-edit" data-id="${event.event_id}"><i class="fas fa-edit"></i></button>
+                  <button class="btn btn-edit" data-id="${event.event_id}" onclick="editEvent(${event.event_id})"><i class="fas fa-edit"></i></button>
                   <button class="btn btn-delete"  onclick="deleteEvent(${event.event_id})" data-id="${event.event_id}">
                   <i class="fas fa-trash"></i>
                   </button>
@@ -306,6 +306,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     paginationContainer.appendChild(nextPageLink);
   }
+
+  window.editEvent = function (eventId) {
+    window.location.href = `manage-event.html?event_id=${eventId}`;
+  };
 
   window.deleteEvent = function (eventId) {
     Swal.fire({

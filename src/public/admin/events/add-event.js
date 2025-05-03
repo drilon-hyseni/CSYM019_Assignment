@@ -1,3 +1,5 @@
+import { showError } from "../../helpers/script.js";
+
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize Select2
   $(document).ready(function () {
@@ -238,14 +240,5 @@ document.addEventListener("DOMContentLoaded", function () {
           "An error occurred while saving the event. Please try again."
         );
       });
-  }
-
-  function showError(message) {
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: message,
-      confirmButtonColor: "#573b8a",
-    });
   }
 });
