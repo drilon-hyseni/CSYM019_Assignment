@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const addEventForm = document.getElementById("add-event-form");
   const backButton = document.getElementById("back-to-dashboard");
   const cancelButton = document.getElementById("cancel-button");
-  const imageInputs = document.querySelectorAll(".image-input");
-  const removeImageButtons = document.querySelectorAll(".remove-image");
+  const imageInput = document.querySelector(".image-input");
+  const removeImageButton = document.querySelector(".remove-image");
 
   // Event listeners
   backButton.addEventListener("click", function () {
@@ -53,26 +53,22 @@ document.addEventListener("DOMContentLoaded", function () {
     submitEventForm();
   });
 
-  // Set up image uploads
-  imageInputs.forEach((input) => {
-    input.addEventListener("change", function (e) {
-      handleImageUpload(e);
-    });
+  // Set up image upload
+  imageInput.addEventListener("change", function (e) {
+    handleImageUpload(e);
   });
 
   // Set up image removal
-  removeImageButtons.forEach((button) => {
-    button.addEventListener("click", function (e) {
-      e.stopPropagation();
-      const uploadBox = this.closest(".image-upload-box");
-      const index = uploadBox.querySelector(".image-input").dataset.index;
-      removeImage(uploadBox, index);
-    });
+  removeImageButton.addEventListener("click", function (e) {
+    e.stopPropagation();
+    const uploadBox = this.closest(".image-upload-box");
+    removeImage(uploadBox);
   });
 
   // Click on the upload box to trigger the file input
-  document.querySelectorAll(".image-upload-box").forEach((box) => {
-    box.addEventListener("click", function (e) {
+  document
+    .querySelector(".image-upload-box")
+    .addEventListener("click", function (e) {
       // Prevent the click if it's already on an input or remove button
       if (
         e.target.classList.contains("image-input") ||
@@ -83,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       this.querySelector(".image-input").click();
     });
-  });
+
   // Functions
   function fetchCategories() {
     fetch("../../../php/categories/get_categories.php", {
@@ -115,10 +111,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     categories.forEach((category) => {
       if (category.is_valid) {
-        // <-- use is_valid
         const option = document.createElement("option");
-        option.value = category.category_id; // <-- use category_id
-        option.textContent = category.category_name; // <-- use category_name
+        option.value = category.category_id;
+        option.textContent = category.category_name;
         dropdown.appendChild(option);
       }
     });
@@ -147,7 +142,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const uploadBox = e.target.closest(".image-upload-box");
-    const index = e.target.dataset.index;
     const previewImage = uploadBox.querySelector(".preview-image");
     const placeholder = uploadBox.querySelector(".upload-placeholder");
     const removeButton = uploadBox.querySelector(".remove-image");
@@ -163,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
     reader.readAsDataURL(file);
   }
 
-  function removeImage(uploadBox, index) {
+  function removeImage(uploadBox) {
     const input = uploadBox.querySelector(".image-input");
     const previewImage = uploadBox.querySelector(".preview-image");
     const placeholder = uploadBox.querySelector(".upload-placeholder");
@@ -195,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Show loading indicator
     Swal.fire({
       title: "Saving Event...",
-      html: "Please wait while we upload images and save your event.",
+      html: "Please wait while we upload the image and save your event.",
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();

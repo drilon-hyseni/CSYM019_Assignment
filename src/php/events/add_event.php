@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id'])) {
 // Include database connection
 require_once '../db.php';
 $pdo = $conn; 
+
 // Function to validate and save uploaded image
 function saveImage($pdo, $file) {
     // Check if file exists and no errors occurred during upload
@@ -66,8 +67,8 @@ try {
     }
     
     // Insert event into the database
-    $query = "INSERT INTO Events (event_title, event_description, event_date, location, date_created, created_by) 
-              VALUES (?, ?, ?, ?, ?, NOW(), ?)";
+    $query = "INSERT INTO Events (event_title, event_description, event_date, location, created_by) 
+              VALUES (?, ?, ?, ?, NOW(), ?)";
     $stmt = $pdo->prepare($query);
     $stmt->execute([$event_title, $event_description, $event_date, $location, $user_id]);
     
@@ -81,29 +82,14 @@ try {
         $stmt->execute([$event_id, $category_id]);
     }
     
-    // Process uploaded images
-    $image_ids = [];
-    if (isset($_FILES['event_images'])) {
-        for ($i = 0; $i < count($_FILES['event_images']['name']); $i++) {
-            if (!empty($_FILES['event_images']['name'][$i])) {
-                $file = [
-                    'name' => $_FILES['event_images']['name'][$i],
-                    'type' => $_FILES['event_images']['type'][$i],
-                    'tmp_name' => $_FILES['event_images']['tmp_name'][$i],
-                    'error' => $_FILES['event_images']['error'][$i],
-                    'size' => $_FILES['event_images']['size'][$i]
-                ];
-                
-                $image_id = saveImage($pdo, $file);
-                if ($image_id) {
-                    $image_ids[] = $image_id;
-                }
-            }
-        }
+    // Process uploaded image
+    $image_id = null;
+    if (isset($_FILES['event_image']) && !empty($_FILES['event_image']['name'])) {
+        $image_id = saveImage($pdo, $_FILES['event_image']);
     }
     
-    // Associate images with the event
-    foreach ($image_ids as $image_id) {
+    // Associate image with the event if one was uploaded
+    if ($image_id) {
         $query = "INSERT INTO Events_Images (Events_event_id, Images_image_id, is_valid) VALUES (?, ?, 1)";
         $stmt = $pdo->prepare($query);
         $stmt->execute([$event_id, $image_id]);

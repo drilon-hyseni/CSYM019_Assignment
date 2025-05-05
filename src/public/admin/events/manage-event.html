@@ -125,12 +125,8 @@
             </div>
           </div>
 
-          <div class="form-section">
-            <h2><i class="fas fa-images"></i> Event Images</h2>
-            <p class="section-info">
-              Upload up to 3 images (Max 5MB each). Accepted formats: JPG, PNG
-            </p>
-
+          <div class="form-group">
+            <label for="event-image">Event Image</label>
             <div class="image-upload-container">
               <div class="image-upload-box" id="image-upload-1">
                 <div class="upload-placeholder">
@@ -145,7 +141,7 @@
                 />
                 <input
                   type="file"
-                  name="event_images[]"
+                  name="event_image"
                   class="image-input"
                   accept="image/jpeg, image/png"
                   data-index="1"
@@ -157,79 +153,11 @@
                 >
                   <i class="fas fa-times"></i>
                 </button>
-                <!-- Hidden field to track existing images -->
+                <!-- Hidden input to store existing image ID for edit mode -->
                 <input
                   type="hidden"
-                  name="existing_image_1"
-                  id="existing-image-1"
-                  value=""
-                />
-              </div>
-
-              <div class="image-upload-box" id="image-upload-2">
-                <div class="upload-placeholder">
-                  <i class="fas fa-cloud-upload-alt"></i>
-                  <p>Click to Upload</p>
-                </div>
-                <img
-                  class="preview-image"
-                  src="#"
-                  alt="Preview"
-                  style="display: none"
-                />
-                <input
-                  type="file"
-                  name="event_images[]"
-                  class="image-input"
-                  accept="image/jpeg, image/png"
-                  data-index="2"
-                />
-                <button
-                  type="button"
-                  class="remove-image"
-                  style="display: none"
-                >
-                  <i class="fas fa-times"></i>
-                </button>
-                <!-- Hidden field to track existing images -->
-                <input
-                  type="hidden"
-                  name="existing_image_2"
-                  id="existing-image-2"
-                  value=""
-                />
-              </div>
-
-              <div class="image-upload-box" id="image-upload-3">
-                <div class="upload-placeholder">
-                  <i class="fas fa-cloud-upload-alt"></i>
-                  <p>Click to Upload</p>
-                </div>
-                <img
-                  class="preview-image"
-                  src="#"
-                  alt="Preview"
-                  style="display: none"
-                />
-                <input
-                  type="file"
-                  name="event_images[]"
-                  class="image-input"
-                  accept="image/jpeg, image/png"
-                  data-index="3"
-                />
-                <button
-                  type="button"
-                  class="remove-image"
-                  style="display: none"
-                >
-                  <i class="fas fa-times"></i>
-                </button>
-                <!-- Hidden field to track existing images -->
-                <input
-                  type="hidden"
-                  name="existing_image_3"
-                  id="existing-image-3"
+                  id="existing-image"
+                  name="existing_image_id"
                   value=""
                 />
               </div>
@@ -237,9 +165,6 @@
           </div>
 
           <div class="form-actions">
-            <button type="button" class="btn btn-secondary" id="cancel-button">
-              Cancel
-            </button>
             <button type="submit" class="btn btn-primary" id="save-button">
               <i class="fas fa-save"></i> Save Event
             </button>
