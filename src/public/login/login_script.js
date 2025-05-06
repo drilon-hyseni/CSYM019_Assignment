@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (data.is_admin) {
           window.location.href = "../admin/dashboard.html";
         } else {
-          window.location.href = "../../index.html";
+          window.location.href = "../user/user-dashboard.html";
         }
       }
     });
@@ -239,7 +239,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (result.is_admin) {
             window.location.href = "../admin/dashboard.html";
           } else {
-            window.location.href = "../../index.html";
+            window.location.href = "../user/user-dashboard.html";
           }
         } else {
           if (result.message === "User not found") {

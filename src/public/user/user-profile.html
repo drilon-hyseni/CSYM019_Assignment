@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+    <link rel="stylesheet" href="../../styles.css" />
+    <link rel="stylesheet" href="user-dashboard.css" />
+    <link rel="stylesheet" href="user-profile.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <div class="user-container">
+      <div class="navbar">
+        <div class="logo">
+          <h1>Events App</h1>
+        </div>
+
+        <div class="nav-links">
+          <a href="user-dashboard.html">
+            <i class="fa-solid fa-calendar-days"></i> Events
+          </a>
+          <a href="liked-posts.php">
+            <i class="fa-solid fa-heart"></i> Liked Posts
+          </a>
+        </div>
+
+        <div class="user-menu">
+          <div class="user-info" id="user-dropdown-toggle">
+            <span id="username-display">Loading...</span>
+            <div class="avatar" id="user-avatar">U</div>
+          </div>
+
+          <div class="dropdown-menu" id="user-dropdown">
+            <a href="#" id="profile-link" class="active">
+              <i class="fa-solid fa-user"></i> My Profile
+            </a>
+            <a href="#" class="logout" id="logout-link">
+              <i class="fa-solid fa-right-from-bracket"></i> Log Out
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="main-content">
+        <div class="page-header">
+          <h2>User Profile</h2>
+        </div>
+
+        <div class="profile-container">
+          <div class="profile-header">
+            <div class="profile-avatar" id="profile-avatar-display">U</div>
+            <h3 id="profile-name-display">Loading...</h3>
+            <p class="member-since" id="member-since">
+              Member since: Loading...
+            </p>
+          </div>
+
+          <form id="profile-form" class="profile-form">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-user"></i>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  placeholder="Full Name"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="username">Username</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-at"></i>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  placeholder="Username"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-envelope"></i>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Email Address"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="password"
+                >New Password (leave blank to keep current)</label
+              >
+              <div class="input-with-icon">
+                <i class="fa-solid fa-lock"></i>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="New Password"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirm_password">Confirm New Password</label>
+              <div class="input-with-icon">
+                <i class="fa-solid fa-lock"></i>
+                <input
+                  type="password"
+                  id="confirm_password"
+                  name="confirm_password"
+                  placeholder="Confirm New Password"
+                />
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="save-btn">
+                <i class="fa-solid fa-save"></i> Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="user-dashboard.js"></script>
+    <script src="user-profile.js"></script>
+  </body>
+</html>

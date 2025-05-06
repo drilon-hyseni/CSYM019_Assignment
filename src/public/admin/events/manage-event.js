@@ -321,17 +321,6 @@ document.addEventListener("DOMContentLoaded", function () {
       showError("Please select at least one category");
       return;
     }
-
-    console.log("=== FormData Being Sent ===");
-    for (let [key, value] of formData.entries()) {
-      if (value instanceof File) {
-        console.log(`${key}: [File] name=${value.name}, size=${value.size}`);
-      } else {
-        console.log(`${key}:`, value);
-      }
-    }
-    console.log("=== End of FormData ===");
-
     // Show loading indicator
     Swal.fire({
       title: isEditMode ? "Updating Event..." : "Saving Event...",
@@ -353,18 +342,6 @@ document.addEventListener("DOMContentLoaded", function () {
       body: formData,
       credentials: "include",
     })
-      .then((response) => {
-        // Log the raw response for debugging
-        return response.text().then((text) => {
-          console.log("Raw API response:", text);
-          try {
-            return JSON.parse(text);
-          } catch (e) {
-            console.error("JSON parse error:", e);
-            throw new Error("Invalid JSON response from server");
-          }
-        });
-      })
       .then((data) => {
         if (data.status === "success") {
           Swal.fire({
