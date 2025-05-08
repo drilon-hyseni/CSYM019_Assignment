@@ -14,9 +14,27 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
     />
+    <!-- Add DateRangePicker CSS -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"
+    />
+
+    <!-- Add Select2 CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <!-- Add moment.js for DateRangePicker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <!-- Add DateRangePicker JS -->
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <!-- Add Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
     <script src="user-dashboard.js"></script>
   </head>
   <body>
@@ -51,10 +69,44 @@
       <div class="main-content">
         <div class="page-header">
           <h2>Upcoming Events</h2>
-          <div class="search-bar">
-            <input type="text" placeholder="Search events..." />
-            <button><i class="fa-solid fa-search"></i></button>
+          <div class="filter-container">
+            <!-- Date Range Filter -->
+            <div class="filter-item date-filter">
+              <input
+                type="text"
+                id="date-range"
+                placeholder="Date Range"
+                readonly
+              />
+              <button id="clear-date-filter" title="Clear Date Filter">
+                <i class="fa-solid fa-times"></i>
+              </button>
+            </div>
+            <!-- Category Filter -->
+            <div class="filter-item category-filter">
+              <select
+                id="category-filter"
+                multiple="multiple"
+                class="category-select"
+              >
+                <!-- Categories will be loaded dynamically -->
+              </select>
+            </div>
+            <!-- Search Bar -->
+            <div class="search-bar">
+              <input
+                type="text"
+                id="search-input"
+                placeholder="Search events..."
+              />
+              <button id="search-button">
+                <i class="fa-solid fa-search"></i>
+              </button>
+            </div>
           </div>
+        </div>
+        <div class="filter-tags" id="filter-tags">
+          <!-- Active filters will be displayed here -->
         </div>
         <div class="events-grid" id="events-container">
           <!-- Events will be loaded dynamically -->
