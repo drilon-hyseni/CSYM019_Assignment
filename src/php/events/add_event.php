@@ -62,13 +62,13 @@ try {
     $user_id = $_SESSION['user_id'];
     
     // Validate required fields
-    if (empty($event_title) || empty($event_description) || empty($event_date) || empty($location) || empty($categories)) {
-        throw new Exception("All required fields must be filled");
-    }
+    // if (empty($event_title) || empty($event_description) || empty($event_date) || empty($location) || empty($categories)) {
+    //     throw new Exception("All required fields must be filled");
+    // }
     
     // Insert event into the database
     $query = "INSERT INTO Events (event_title, event_description, event_date, location, created_by) 
-              VALUES (?, ?, ?, ?, NOW(), ?)";
+            VALUES (?, ?, ?, ?,  ?)";
     $stmt = $pdo->prepare($query);
     $stmt->execute([$event_title, $event_description, $event_date, $location, $user_id]);
     

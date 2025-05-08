@@ -95,9 +95,9 @@ try {
     $stmt->execute([$event_id]);
     $event = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    if (!$event) {
-        throw new Exception("Event not found");
-    }
+    // if (!$event) {
+    //     throw new Exception("Event not found");
+    // }
     
     // Check if user is admin or event creator
     $isAdmin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == 1;
