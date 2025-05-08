@@ -346,7 +346,7 @@ function likeEvent(eventId, heartButton) {
 }
 
 function viewEventDetails(eventId) {
-  window.location.href = `event-details.php?id=${eventId}`;
+  window.location.href = `event-detail/event-details.html?id=${eventId}`;
 }
 
 function performSearch(searchTerm) {

@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
               title: "Account created!",
               text: "You have successfully registered.",
             }).then(function () {
-              window.location = "../../index.html";
+              window.location = "login.html";
             });
           } else {
             Swal.fire({

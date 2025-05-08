@@ -41,6 +41,14 @@ try {
     $stmt = $pdo->prepare($query);
     $stmt->execute([$event_id]);
     $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $query = "SELECT c.comment_id, c.comment, c.User_id, u.username 
+             FROM Comments c 
+             JOIN users u ON c.User_id = u.id 
+             WHERE c.Events_event_id = ?";
+    $stmt = $pdo->prepare($query);
+    $stmt->execute([$event_id]);
+    $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Get event images
     $query = "SELECT i.image_id, i.image_name, i.image_type, i.Image_data
@@ -63,7 +71,8 @@ try {
         'status' => 'success',
         'event' => $event,
         'categories' => $categories,
-        'images' => $images
+        'images' => $images,
+        'comments' => $comments
     ];
     
     // Return the response
