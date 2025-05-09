@@ -663,3 +663,7 @@
     margin-bottom: 15px;
   }
 }
+
+.select2-container .select2-search--inline .select2-search__field {
+  height: 24px !important;
+}

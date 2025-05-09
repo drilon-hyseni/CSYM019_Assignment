@@ -21,10 +21,21 @@ try {
     $dateStart = isset($_GET['date_start']) ? $_GET['date_start'] : null;
     $dateEnd = isset($_GET['date_end']) ? $_GET['date_end'] : null;
     $categories = isset($_GET['categories']) ? $_GET['categories'] : [];
+    $likedOnly = isset($_GET['liked_only']) && $_GET['liked_only'] === '1';
     
     // Base query
     $baseQuery = "FROM Events e WHERE e.is_valid = 1";
     $params = [];
+
+    // Add liked_only filter
+    if ($likedOnly) {
+        $baseQuery .= " AND e.event_id IN (
+            SELECT Events_event_id 
+            FROM User_liked_Events 
+            WHERE User_id = ?
+        )";
+        $params[] = $userId;
+    }
 
     // Add search filter
     if (!empty($search)) {

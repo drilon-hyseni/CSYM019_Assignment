@@ -2,12 +2,13 @@ document.addEventListener("DOMContentLoaded", function () {
   // Check session and load user data
   checkUserSession();
 
-  // Initialize filter state - Remove the duplicate declaration at the end of the file
+  // Initialize filter state
   const filters = {
     search: "",
     dateStart: null,
     dateEnd: null,
     categories: [],
+    likedOnly: false,
   };
 
   // Initialize toastr notification library
@@ -18,9 +19,38 @@ document.addEventListener("DOMContentLoaded", function () {
     timeOut: 3000,
   };
 
+  // Setup navigation links
+  const allEventsLink = document.getElementById("all-events-link");
+  const likedEventsLink = document.getElementById("liked-events-link");
+
+  allEventsLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    if (filters.likedOnly) {
+      filters.likedOnly = false;
+      allEventsLink.classList.add("active");
+      likedEventsLink.classList.remove("active");
+      document.getElementById("page-title").textContent = "Upcoming Events";
+      updateFilterTags();
+      loadUserEvents(1);
+    }
+  });
+
+  likedEventsLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    if (!filters.likedOnly) {
+      filters.likedOnly = true;
+      likedEventsLink.classList.add("active");
+      allEventsLink.classList.remove("active");
+      document.getElementById("page-title").textContent = "Liked Events";
+      updateFilterTags();
+      loadUserEvents(1);
+    }
+  });
+
   // Setup dropdown menu toggle
   const userDropdownToggle = document.getElementById("user-dropdown-toggle");
   const userDropdown = document.getElementById("user-dropdown");
+
   userDropdownToggle.addEventListener("click", function () {
     userDropdown.classList.toggle("active");
   });
@@ -47,6 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // Setup search functionality
   const searchInput = document.getElementById("search-input");
   const searchButton = document.getElementById("search-button");
+
   searchButton.addEventListener("click", function () {
     filters.search = searchInput.value.trim();
     updateFilterTags();
@@ -141,13 +172,17 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
 
-    // Fix: Use filters object directly instead of trying to parse date range again
     if (filters.dateStart) {
       params.append("date_start", filters.dateStart);
     }
 
     if (filters.dateEnd) {
       params.append("date_end", filters.dateEnd);
+    }
+
+    // Add liked_only parameter
+    if (filters.likedOnly) {
+      params.append("liked_only", "1");
     }
 
     // Fetch events from the server
@@ -185,6 +220,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const filterTagsContainer = document.getElementById("filter-tags");
     filterTagsContainer.innerHTML = "";
     let hasActiveTags = false;
+
+    // Add liked filter tag if active
+    if (filters.likedOnly) {
+      addFilterTag(filterTagsContainer, "Showing: Liked events only", () => {
+        filters.likedOnly = false;
+        allEventsLink.classList.add("active");
+        likedEventsLink.classList.remove("active");
+        document.getElementById("page-title").textContent = "Upcoming Events";
+        updateFilterTags();
+        loadUserEvents(1);
+      });
+      hasActiveTags = true;
+    }
 
     // Add search filter tag if active
     if (filters.search) {
@@ -282,6 +330,14 @@ document.addEventListener("DOMContentLoaded", function () {
     filters.dateEnd = null;
     filters.categories = [];
 
+    // Reset liked events filter if active
+    if (filters.likedOnly) {
+      filters.likedOnly = false;
+      allEventsLink.classList.add("active");
+      likedEventsLink.classList.remove("active");
+      document.getElementById("page-title").textContent = "Upcoming Events";
+    }
+
     // Update UI and reload events
     updateFilterTags();
     loadUserEvents(1);
@@ -300,13 +356,16 @@ function checkUserSession() {
         window.location.href = "../login/login.html";
         return;
       }
+
       if (data.is_admin) {
         // Redirect to admin dashboard if admin
         window.location.href = "../admin/dashboard.php";
         return;
       }
+
       // Update UI with username
       document.getElementById("username-display").textContent = data.username;
+
       // Update avatar with first letter of username
       if (data.username) {
         document.getElementById("user-avatar").textContent = data.username
@@ -331,6 +390,7 @@ function checkUserSession() {
 function displayEvents(events) {
   const eventsContainer = document.getElementById("events-container");
   eventsContainer.innerHTML = "";
+
   if (events.length === 0) {
     eventsContainer.innerHTML = `<div class="no-events">
           <i class="fa-solid fa-calendar-xmark"></i>
@@ -338,6 +398,7 @@ function displayEvents(events) {
       </div>`;
     return;
   }
+
   events.forEach((event) => {
     const eventCard = createEventCard(event);
     eventsContainer.appendChild(eventCard);
@@ -358,6 +419,7 @@ function createEventCard(event) {
   const imageHTML = hasImage
     ? `<img src="${imageSource}" alt="${event.event_title}" />`
     : `<div class="event-image-placeholder"><i class="fa-solid fa-image fa-3x"></i></div>`;
+
   const card = document.createElement("div");
   card.className = "event-card";
   card.innerHTML = `
@@ -389,17 +451,20 @@ function createEventCard(event) {
         </button>
     </div>
   `;
+
   // Add event listeners
   setTimeout(() => {
     card.querySelector(".heart-btn").addEventListener("click", function () {
       likeEvent(event.event_id, this);
     });
+
     card
       .querySelector(".view-details-btn")
       .addEventListener("click", function () {
         viewEventDetails(event.event_id);
       });
   }, 0);
+
   return card;
 }
 
@@ -410,6 +475,7 @@ function renderCategories(categories) {
   if (!categories || categories.length === 0) {
     return "";
   }
+
   return categories
     .map(
       (category) =>
@@ -435,8 +501,10 @@ function formatTime(date) {
 function setupPagination(pagination) {
   const paginationContainer = document.getElementById("pagination");
   if (!paginationContainer) return;
+
   const { currentPage, totalPages } = pagination;
   let paginationHTML = '<div class="pagination-controls">';
+
   // Previous button
   paginationHTML += `<button class="page-btn prev-btn" ${
     currentPage <= 1 ? "disabled" : ""
@@ -444,8 +512,10 @@ function setupPagination(pagination) {
       data-page="${currentPage - 1}">
       <i class="fa-solid fa-chevron-left"></i> Previous
   </button>`;
+
   // Page numbers
   paginationHTML += '<div class="page-numbers">';
+
   // First page
   if (currentPage > 3) {
     paginationHTML += `<button class="page-btn" data-page="1">1</button>`;
@@ -453,15 +523,18 @@ function setupPagination(pagination) {
       paginationHTML += '<span class="page-ellipsis">...</span>';
     }
   }
+
   // Page numbers around current page
   const start = Math.max(1, currentPage - 2);
   const end = Math.min(totalPages, currentPage + 2);
+
   for (let i = start; i <= end; i++) {
     paginationHTML += `<button class="page-btn ${
       i === currentPage ? "active" : ""
     }" 
           data-page="${i}">${i}</button>`;
   }
+
   // Last page
   if (currentPage < totalPages - 2) {
     if (currentPage < totalPages - 3) {
@@ -469,7 +542,9 @@ function setupPagination(pagination) {
     }
     paginationHTML += `<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`;
   }
+
   paginationHTML += "</div>";
+
   // Next button
   paginationHTML += `<button class="page-btn next-btn" ${
     currentPage >= totalPages ? "disabled" : ""
@@ -477,8 +552,10 @@ function setupPagination(pagination) {
       data-page="${currentPage + 1}">
       Next <i class="fa-solid fa-chevron-right"></i>
   </button>`;
+
   paginationHTML += "</div>";
   paginationContainer.innerHTML = paginationHTML;
+
   // Add event listeners to pagination buttons
   const pageButtons = paginationContainer.querySelectorAll(".page-btn");
   pageButtons.forEach((button) => {
@@ -486,6 +563,7 @@ function setupPagination(pagination) {
       if (this.hasAttribute("disabled")) return;
       const pageNumber = parseInt(this.getAttribute("data-page"));
       loadUserEvents(pageNumber);
+
       // Scroll to top of events section
       document
         .querySelector(".main-content")
@@ -500,8 +578,10 @@ function setupPagination(pagination) {
 function likeEvent(eventId, heartButton) {
   const heartIcon = heartButton.querySelector("i");
   const isLiked = heartIcon.classList.contains("fa-solid");
+
   // Determine the action (like or unlike)
   const action = isLiked ? "unlike" : "like";
+
   fetch("../../php/events/like_event.php", {
     method: "POST",
     headers: {
@@ -521,10 +601,21 @@ function likeEvent(eventId, heartButton) {
         heartIcon.className = isLiked
           ? "fa-regular fa-heart"
           : "fa-solid fa-heart";
+
         if (action === "like") {
           toastr.success("Event added to your likes!");
         } else {
           toastr.info("Event removed from your likes");
+
+          // If we're in the liked events view, reload the events
+          // to remove this card if it was just unliked
+          if (
+            document
+              .getElementById("liked-events-link")
+              .classList.contains("active")
+          ) {
+            loadUserEvents(1);
+          }
         }
       } else {
         heartIcon.className = isLiked
@@ -581,6 +672,7 @@ function fetchCategories() {
 function populateCategoryFilter(categories) {
   const categorySelect = document.getElementById("category-filter");
   categorySelect.innerHTML = "";
+
   if (categories && categories.length > 0) {
     categories.forEach((category) => {
       const option = document.createElement("option");
@@ -589,6 +681,7 @@ function populateCategoryFilter(categories) {
       categorySelect.appendChild(option);
     });
   }
+
   // Refresh Select2 to show the new options
   $(categorySelect).trigger("change");
 }
